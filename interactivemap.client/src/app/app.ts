@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, signal, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -7,35 +6,6 @@ import { Component, signal, OnInit } from '@angular/core';
   standalone: false,
   styleUrl: './app.css'
 })
-export class App implements OnInit {
-  public forecasts: WeatherForecast[] = [];
-
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.getForecasts();
-  }
-
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  protected readonly title = signal('interactivemap.client');
-}
-
-export class WeatherForecast {
-  date!: Date;
-
-  temperatureC!: number;
-
-  temperatureF!: number;
-
-  summary!: string;
+export class App {
+  constructor() { }
 }

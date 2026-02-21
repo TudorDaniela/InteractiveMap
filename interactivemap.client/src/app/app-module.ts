@@ -4,16 +4,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { WorldMapComponent } from './components/world-map/world-map.component';
+import { WorldMapModule } from './components/world-map/world-map.module';
 
 @NgModule({
   declarations: [
     App,
-    WorldMapComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    WorldMapModule,
   ],
   providers: [
     provideBrowserGlobalErrorListeners()
