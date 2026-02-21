@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -28,4 +28,14 @@ export class App implements OnInit {
   }
 
   protected readonly title = signal('interactivemap.client');
+}
+
+export class WeatherForecast {
+  date!: Date;
+
+  temperatureC!: number;
+
+  temperatureF!: number;
+
+  summary!: string;
 }
