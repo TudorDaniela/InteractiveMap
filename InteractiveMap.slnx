@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="interactivemap.client/interactivemap.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="InteractiveMap.Server/InteractiveMap.Server.csproj" />
+</Solution>
