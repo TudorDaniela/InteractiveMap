@@ -34,14 +34,14 @@ export class WorldMapComponent implements OnInit {
   }
 
   loadCountries() {
-    this.http.get<any[]>('https://restcountries.com/v3.1/all').subscribe(
+    this.http.get<any[]>('/countries').subscribe(
       (data) => {
         this.countries = data.map(country => ({
-          name: country.name.common,
-          code: country.cca2,
-          capital: country.capital?.[0] || 'N/A',
-          region: country.region || 'Unknown',
-          visited: this.visitedCountries.has(country.cca2)
+          name: country.name,
+          code: country.code,
+          capital: country.capital,
+          region: country.region,
+          visited: this.visitedCountries.has(country.code)
         })).sort((a, b) => a.name.localeCompare(b.name));
         this.loading = false;
       },
