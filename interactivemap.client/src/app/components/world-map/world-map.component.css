@@ -42,6 +42,15 @@
   transition: width 0.3s ease;
 }
 
+.map-container {
+  width: 100%;
+  height: 600px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  margin-bottom: 30px;
+}
+
 .loading,
 .error {
   text-align: center;
@@ -209,5 +218,9 @@
   .country-details {
     position: static;
     margin-top: 8px;
+  }
+
+  .map-container {
+    height: 320px;
   }
 }

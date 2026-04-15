@@ -9,6 +9,9 @@
     </div>
   </div>
 
+  <div *ngIf="mapError" class="error">{{ mapError }}</div>
+  <div #mapContainer class="map-container"></div>
+
   <div *ngIf="loading" class="loading">Loading countries...</div>
   <div *ngIf="error" class="error">{{ error }}</div>
 
