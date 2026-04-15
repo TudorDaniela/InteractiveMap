@@ -23,7 +23,7 @@ namespace InteractiveMap.Server.Controllers
             try
             {
                 var client = _httpClientFactory.CreateClient();
-                var response = await client.GetAsync("https://restcountries.com/v3.1/all");
+                var response = await client.GetAsync("https://restcountries.com/v3.1/all?fields=name,cca2,capital,region,population,flag,latlng,languages");
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -94,7 +94,7 @@ namespace InteractiveMap.Server.Controllers
             try
             {
                 var client = _httpClientFactory.CreateClient();
-                var response = await client.GetAsync($"https://restcountries.com/v3.1/alpha/{code}");
+                var response = await client.GetAsync($"https://restcountries.com/v3.1/alpha/{code}?fields=name,cca2,capital,region,population,flag,latlng,languages");
 
                 if (!response.IsSuccessStatusCode)
                 {
