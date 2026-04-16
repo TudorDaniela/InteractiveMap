@@ -1,15 +1,31 @@
 <div class="world-map-container">
-  <div class="map-header">
-    <h2>Interactive World Map</h2>
-    <div class="stats">
-      <p>Visited: <strong>{{ visitedCountries.size }}/{{ countries.length }}</strong> countries</p>
-      <div class="progress-bar">
-        <div class="progress-fill" [style.width.%]="getVisitedPercentage()"></div>
+  <section class="controls-panel card">
+    <div class="controls-top">
+      <div>
+        <h1>Travel Explorer</h1>
+        <p>Track the countries you've visited and discover new destinations on your personal world travel map.</p>
+      </div>
+      <div class="controls-status">
+        <div class="stat-card accent">
+          <span>Visited destinations</span>
+          <strong>{{ visitedCountries.size }}/{{ countries.length }}</strong>
+        </div>
+        <div class="stat-card">
+          <span>Travel progress</span>
+          <strong>{{ getVisitedPercentage() }}%</strong>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div *ngIf="mapError" class="error">{{ mapError }}</div>
-  <div #mapContainer class="map-container"></div>
+    <p class="controls-note">Tap a country on the map to add it to your travel history.</p>
+  </section>
 
+  <section class="map-panel card">
+    <div class="map-panel-header">
+      <p>Interactive travel map — tap a country to mark it as visited and log your journey.</p>
+    </div>
+
+    <div *ngIf="mapError" class="error">{{ mapError }}</div>
+    <div #mapContainer class="map-container"></div>
+  </section>
 </div>

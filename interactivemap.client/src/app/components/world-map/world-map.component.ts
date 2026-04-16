@@ -7,11 +7,6 @@ interface Country {
   name: string;
   code: string;
   capital: string;
-  region: string;
-}
-
-interface CountryWithVisited extends Country {
-  visited: boolean;
 }
 
 @Component({
@@ -23,10 +18,9 @@ interface CountryWithVisited extends Country {
 export class WorldMapComponent implements OnInit, AfterViewInit {
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
 
-  countries: CountryWithVisited[] = [];
-  hoveredCountry: CountryWithVisited | null = null;
+  countries: Country[] = [];
   visitedCountries: Set<string> = new Set();
-  loading = true;
+  countryNameToCode: Map<string, string> = new Map();
   mapError: string | null = null;
 
   private map!: L.Map;
@@ -69,33 +63,45 @@ export class WorldMapComponent implements OnInit, AfterViewInit {
           const geojson = parseKml(xmlDoc) as any;
 
           this.kmlLayer = L.geoJSON(geojson, {
-            style: {
-              color: '#1f78b4',
-              weight: 1,
-              fillColor: '#a6cee3',
-              fillOpacity: 0.15,
-            },
-            pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
-              radius: 4,
-              fillColor: '#ff6600',
-              color: '#ffffff',
-              weight: 1,
-              opacity: 1,
-              fillOpacity: 1,
-            }),
-            onEachFeature: (feature, layer) => {
-              const name = feature.properties?.name || feature.properties?.Name || 'Country';
-              layer.bindPopup(`<strong>${name}</strong>`);
-              if (layer instanceof L.Path) {
-                layer.on('mouseover', () => {
-                  layer.setStyle({ weight: 2, color: '#ff6600' });
-                });
-                layer.on('mouseout', () => {
-                  layer.setStyle({ weight: 1, color: '#1f78b4' });
-                });
+            filter: (feature) => {
+              const type = feature.geometry?.type;
+              if (!type) {
+                return false;
               }
+              if (type === 'Polygon' || type === 'MultiPolygon') {
+                return true;
+              }
+              if (type === 'GeometryCollection' && Array.isArray(feature.geometry.geometries)) {
+                return feature.geometry.geometries.some((item: any) => item.type === 'Polygon' || item.type === 'MultiPolygon');
+              }
+              return false;
+            },
+            style: (feature) => this.getFeatureStyle(feature),
+            onEachFeature: (feature, layer) => {
+              const pathLayer = layer as L.Path;
+              const label = this.getFeatureLabel(feature);
+              pathLayer.bindTooltip(`<span class="map-tooltip-label">${label}</span>`, {
+                direction: 'center',
+                className: 'map-tooltip',
+                sticky: true,
+                opacity: 0.95,
+              });
+              pathLayer.on('mouseover', () => {
+                pathLayer.setStyle({ weight: 2, color: '#ffcc00' });
+                pathLayer.openTooltip();
+              });
+              pathLayer.on('mouseout', () => {
+                pathLayer.setStyle(this.getFeatureStyle(feature));
+                pathLayer.closeTooltip();
+              });
+              pathLayer.on('click', () => {
+                this.toggleFeatureVisited(feature);
+                pathLayer.setStyle(this.getFeatureStyle(feature));
+              });
             }
           }).addTo(this.map);
+
+          this.refreshKmlStyles();
 
           const bounds = this.kmlLayer.getBounds();
           if (bounds.isValid()) {
@@ -120,37 +126,33 @@ export class WorldMapComponent implements OnInit, AfterViewInit {
           name: country.name,
           code: country.code,
           capital: country.capital,
-          region: country.region,
-          visited: this.visitedCountries.has(country.code)
         })).sort((a, b) => a.name.localeCompare(b.name));
-        this.loading = false;
+        this.countryNameToCode = new Map(this.countries.map(c => [this.normalizeName(c.name), c.code]));
+        
+        this.refreshKmlStyles();
       },
       (error) => {
         console.error('Error loading countries:', error);
-        this.loading = false;
       }
     );
   }
 
-  onCountryHover(country: CountryWithVisited) {
-    this.hoveredCountry = country;
-  }
+  toggleFeatureVisited(feature: any) {
+    const rawName = this.getFeatureName(feature);
+    const normalized = this.normalizeName(rawName);
+    const code = this.countryNameToCode.get(normalized);
+    if (!code) {
+      return;
+    }
 
-  onCountryLeave() {
-    this.hoveredCountry = null;
-  }
-
-  toggleCountryVisited(country: CountryWithVisited, event: Event) {
-    event.stopPropagation();
-    country.visited = !country.visited;
-
-    if (country.visited) {
-      this.visitedCountries.add(country.code);
+    if (this.visitedCountries.has(code)) {
+      this.visitedCountries.delete(code);
     } else {
-      this.visitedCountries.delete(country.code);
+      this.visitedCountries.add(code);
     }
 
     this.saveVisitedCountries();
+    this.refreshKmlStyles();
   }
 
   private loadVisitedCountries() {
@@ -162,6 +164,87 @@ export class WorldMapComponent implements OnInit, AfterViewInit {
 
   private saveVisitedCountries() {
     localStorage.setItem('visitedCountries', JSON.stringify(Array.from(this.visitedCountries)));
+  }
+
+  private normalizeName(name: string): string {
+    return name
+      .replace(/<[^>]+>/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  }
+
+  private getFeatureName(feature: any): string {
+    return feature.properties?.name || feature.properties?.Name || 'Country';
+  }
+
+  private getFeatureLabel(feature: any): string {
+    const rawName = this.getFeatureName(feature);
+    const code = this.getCountryCode(feature);
+    if (!code) {
+      return rawName;
+    }
+
+    const country = this.countries.find(country => country.code === code);
+    return country?.capital || rawName;
+  }
+
+  private getCountryCode(feature: any): string | null {
+    const rawName = this.getFeatureName(feature);
+    const normalized = this.normalizeName(rawName);
+    const code = this.countryNameToCode.get(normalized);
+    if (code) {
+      return code;
+    }
+
+    const exact = this.countries.find(country => this.normalizeName(country.name) === normalized);
+    if (exact) {
+      return exact.code;
+    }
+
+    const partial = this.countries.find(country => {
+      const continued = this.normalizeName(country.name);
+      return continued.includes(normalized) || normalized.includes(continued);
+    });
+    return partial?.code ?? null;
+  }
+
+  private getFeatureStyle(feature: any): L.PathOptions {
+    const rawName = this.getFeatureName(feature);
+    const normalized = this.normalizeName(rawName);
+    const code = this.countryNameToCode.get(normalized) || '';
+    const visited = !!code && this.visitedCountries.has(code);
+
+    if (visited) {
+      return {
+        color: '#0ea5e9',
+        weight: 1,
+        fillColor: '#34d399',
+        fillOpacity: 0.45,
+        interactive: true,
+      } as unknown as L.PathOptions;
+    }
+
+    return {
+      color: '#1f78b4',
+      weight: 1,
+      fillColor: '#a6cee3',
+      fillOpacity: 0.15,
+      interactive: true,
+    } as unknown as L.PathOptions;
+  }
+
+  private refreshKmlStyles() {
+    if (!this.kmlLayer) {
+      return;
+    }
+
+    this.kmlLayer.eachLayer((layer: any) => {
+      const feature = (layer as any).feature;
+      if (layer instanceof L.Path && feature) {
+        layer.setStyle(this.getFeatureStyle(feature));
+      }
+    });
   }
 
   getVisitedPercentage(): number {
