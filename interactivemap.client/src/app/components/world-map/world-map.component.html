@@ -12,31 +12,4 @@
   <div *ngIf="mapError" class="error">{{ mapError }}</div>
   <div #mapContainer class="map-container"></div>
 
-  <div *ngIf="loading" class="loading">Loading countries...</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-
-  <div class="countries-grid">
-    <div *ngFor="let country of countries"
-         class="country-card"
-         [class.visited]="country.visited"
-         [class.hovered]="hoveredCountry === country"
-         (mouseenter)="onCountryHover(country)"
-         (mouseleave)="onCountryLeave()">
-      <div class="country-content">
-        <span class="country-flag">{{ country.code }}</span>
-        <span class="country-name">{{ country.name }}</span>
-        <span *ngIf="country.visited" class="visited-badge">✓</span>
-      </div>
-
-      <div *ngIf="hoveredCountry === country" class="country-details">
-        <p><strong>Capital:</strong> {{ country.capital }}</p>
-        <p><strong>Region:</strong> {{ country.region }}</p>
-        <button class="visit-btn"
-                [class.visited-btn]="country.visited"
-                (click)="toggleCountryVisited(country, $event)">
-          {{ country.visited ? 'Mark as Unvisited' : 'Mark as Visited' }}
-        </button>
-      </div>
-    </div>
-  </div>
 </div>

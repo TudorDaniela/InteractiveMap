@@ -27,7 +27,6 @@ export class WorldMapComponent implements OnInit, AfterViewInit {
   hoveredCountry: CountryWithVisited | null = null;
   visitedCountries: Set<string> = new Set();
   loading = true;
-  error: string | null = null;
   mapError: string | null = null;
 
   private map!: L.Map;
@@ -120,7 +119,6 @@ export class WorldMapComponent implements OnInit, AfterViewInit {
       },
       (error) => {
         console.error('Error loading countries:', error);
-        this.error = 'Failed to load countries data';
         this.loading = false;
       }
     );
