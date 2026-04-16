@@ -75,6 +75,14 @@ export class WorldMapComponent implements OnInit, AfterViewInit {
               fillColor: '#a6cee3',
               fillOpacity: 0.15,
             },
+            pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
+              radius: 4,
+              fillColor: '#ff6600',
+              color: '#ffffff',
+              weight: 1,
+              opacity: 1,
+              fillOpacity: 1,
+            }),
             onEachFeature: (feature, layer) => {
               const name = feature.properties?.name || feature.properties?.Name || 'Country';
               layer.bindPopup(`<strong>${name}</strong>`);
