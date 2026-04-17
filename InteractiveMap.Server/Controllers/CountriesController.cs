@@ -21,6 +21,7 @@ namespace InteractiveMap.Server.Controllers
         [HttpGet(Name = "GetAllCountries")]
         public async Task<ActionResult<IEnumerable<Country>>> Get(JsonHelper jsonHelper)
         {
+            //TODO: remove business logic from controller and move it to a service class to make it more testable and maintainable
             try
             {
                 var client = _httpClientFactory.CreateClient();
