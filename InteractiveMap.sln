@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteractiveMap.Server", "In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteractiveMap.Tests", "InteractiveMap.Tests\InteractiveMap.Tests.csproj", "{FF7D8DD4-E03E-4368-B687-3CC594E55954}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteractiveMap.Infrastructure", "InteractiveMap.Infrastructure\InteractiveMap.Infrastructure.csproj", "{9CAD9331-9861-45CD-9F06-E52070611F2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{FF7D8DD4-E03E-4368-B687-3CC594E55954}.Release|x64.Build.0 = Release|Any CPU
 		{FF7D8DD4-E03E-4368-B687-3CC594E55954}.Release|x86.ActiveCfg = Release|Any CPU
 		{FF7D8DD4-E03E-4368-B687-3CC594E55954}.Release|x86.Build.0 = Release|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Debug|x64.Build.0 = Debug|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Debug|x86.Build.0 = Debug|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Release|x64.ActiveCfg = Release|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Release|x64.Build.0 = Release|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Release|x86.ActiveCfg = Release|Any CPU
+		{9CAD9331-9861-45CD-9F06-E52070611F2B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

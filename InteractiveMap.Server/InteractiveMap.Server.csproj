@@ -23,6 +23,7 @@
     <ProjectReference Include="..\interactivemap.client\interactivemap.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+      <ProjectReference Include="..\InteractiveMap.Infrastructure\InteractiveMap.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

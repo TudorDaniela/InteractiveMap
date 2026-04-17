@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InteractiveMap.Server\InteractiveMap.Server.csproj" />
+    <ProjectReference Include="..\InteractiveMap.Infrastructure\InteractiveMap.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

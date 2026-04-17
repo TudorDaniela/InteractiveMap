@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
+﻿using InteractiveMap.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace InteractiveMap.Server.Controllers

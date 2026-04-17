@@ -1,4 +1,4 @@
-﻿using InteractiveMap.Server;
+﻿using InteractiveMap.Infrastructure;
 using InteractiveMap.Server.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

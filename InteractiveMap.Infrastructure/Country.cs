@@ -1,4 +1,4 @@
-namespace InteractiveMap.Server
+namespace InteractiveMap.Infrastructure
 {
     public class Country
     {
