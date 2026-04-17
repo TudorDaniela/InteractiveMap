@@ -41,7 +41,7 @@ export class WorldMapComponent implements OnInit, AfterViewInit {
 
   private initializeMap() {
     this.map = L.map(this.mapContainer.nativeElement, {
-      center: [20, 0],
+      center: [20, 120],
       zoom: 2,
       minZoom: 2,
       maxZoom: 6,
@@ -102,11 +102,6 @@ export class WorldMapComponent implements OnInit, AfterViewInit {
           }).addTo(this.map);
 
           this.refreshKmlStyles();
-
-          const bounds = this.kmlLayer.getBounds();
-          if (bounds.isValid()) {
-            this.map.fitBounds(bounds, { padding: [20, 20] });
-          }
         } catch (error) {
           console.error('Failed to parse KML:', error);
           this.mapError = 'Unable to load the world map KML layer.';
