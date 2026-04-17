@@ -2,9 +2,10 @@ using System.Text.Json;
 
 namespace InteractiveMap.Infrastructure.Helpers
 {
-    public static class JsonHelper
+    public class JsonHelper
     {
-        private static string? GetJsonStringValue(JsonElement element, params string[] path)
+        public JsonHelper() { }
+        public string? GetJsonStringValue(JsonElement element, params string[] path)
         {
             JsonElement current = element;
             foreach (var key in path)
@@ -21,7 +22,7 @@ namespace InteractiveMap.Infrastructure.Helpers
             return current.GetString();
         }
 
-        private static string? GetJsonArrayFirstString(JsonElement element, string key)
+        public string? GetJsonArrayFirstString(JsonElement element, string key)
         {
             if (element.TryGetProperty(key, out var arrayElement) && arrayElement.ValueKind == JsonValueKind.Array)
             {
@@ -34,7 +35,7 @@ namespace InteractiveMap.Infrastructure.Helpers
             return null;
         }
 
-        private static long GetJsonLongValue(JsonElement element, string key)
+        public long GetJsonLongValue(JsonElement element, string key)
         {
             if (element.TryGetProperty(key, out var value) && value.TryGetInt64(out var result))
             {
@@ -43,7 +44,7 @@ namespace InteractiveMap.Infrastructure.Helpers
             return 0;
         }
 
-        private static double GetJsonDoubleValue(JsonElement element, string key, int arrayIndex)
+        public double GetJsonDoubleValue(JsonElement element, string key, int arrayIndex)
         {
             if (element.TryGetProperty(key, out var arrayElement) && arrayElement.ValueKind == JsonValueKind.Array)
             {

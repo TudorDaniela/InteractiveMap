@@ -1,4 +1,5 @@
 ﻿using InteractiveMap.Infrastructure;
+using InteractiveMap.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -18,7 +19,7 @@ namespace InteractiveMap.Server.Controllers
         }
 
         [HttpGet(Name = "GetAllCountries")]
-        public async Task<ActionResult<IEnumerable<Country>>> Get()
+        public async Task<ActionResult<IEnumerable<Country>>> Get(JsonHelper jsonHelper)
         {
             try
             {
@@ -48,14 +49,14 @@ namespace InteractiveMap.Server.Controllers
                     {
                         var country = new Country
                         {
-                            Name = GetJsonStringValue(item, "name", "common") ?? "Unknown",
-                            Code = GetJsonStringValue(item, "cca2") ?? string.Empty,
-                            Capital = GetJsonArrayFirstString(item, "capital") ?? "N/A",
-                            Region = GetJsonStringValue(item, "region") ?? "Unknown",
-                            Population = GetJsonLongValue(item, "population"),
-                            Flag = GetJsonStringValue(item, "flag") ?? "🌍",
-                            Latitude = GetJsonDoubleValue(item, "latlng", 0),
-                            Longitude = GetJsonDoubleValue(item, "latlng", 1)
+                            Name = jsonHelper.GetJsonStringValue(item, "name", "common") ?? "Unknown",
+                            Code = jsonHelper.GetJsonStringValue(item, "cca2") ?? string.Empty,
+                            Capital = jsonHelper.GetJsonArrayFirstString(item, "capital") ?? "N/A",
+                            Region = jsonHelper.GetJsonStringValue(item, "region") ?? "Unknown",
+                            Population = jsonHelper.GetJsonLongValue(item, "population"),
+                            Flag = jsonHelper.GetJsonStringValue(item, "flag") ?? "🌍",
+                            Latitude = jsonHelper.GetJsonDoubleValue(item, "latlng", 0),
+                            Longitude = jsonHelper.GetJsonDoubleValue(item, "latlng", 1)
                         };
 
                         // Extract languages
@@ -89,7 +90,7 @@ namespace InteractiveMap.Server.Controllers
         }
 
         [HttpGet("{code}", Name = "GetCountryByCode")]
-        public async Task<ActionResult<Country>> GetByCode(string code)
+        public async Task<ActionResult<Country>> GetByCode(JsonHelper jsonHelper, string code)
         {
             try
             {
@@ -113,14 +114,14 @@ namespace InteractiveMap.Server.Controllers
                 var item = rawCountries[0];
                 var country = new Country
                 {
-                    Name = GetJsonStringValue(item, "name", "common") ?? "Unknown",
-                    Code = GetJsonStringValue(item, "cca2") ?? string.Empty,
-                    Capital = GetJsonArrayFirstString(item, "capital") ?? "N/A",
-                    Region = GetJsonStringValue(item, "region") ?? "Unknown",
-                    Population = GetJsonLongValue(item, "population"),
-                    Flag = GetJsonStringValue(item, "flag") ?? "🌍",
-                    Latitude = GetJsonDoubleValue(item, "latlng", 0),
-                    Longitude = GetJsonDoubleValue(item, "latlng", 1)
+                    Name = jsonHelper.GetJsonStringValue(item, "name", "common") ?? "Unknown",
+                    Code = jsonHelper.GetJsonStringValue(item, "cca2") ?? string.Empty,
+                    Capital = jsonHelper.GetJsonArrayFirstString(item, "capital") ?? "N/A",
+                    Region = jsonHelper.GetJsonStringValue(item, "region") ?? "Unknown",
+                    Population = jsonHelper.GetJsonLongValue(item, "population"),
+                    Flag = jsonHelper.GetJsonStringValue(item, "flag") ?? "🌍",
+                    Latitude = jsonHelper.GetJsonDoubleValue(item, "latlng", 0),
+                    Longitude = jsonHelper.GetJsonDoubleValue(item, "latlng", 1)
                 };
 
                 return Ok(country);
@@ -132,57 +133,6 @@ namespace InteractiveMap.Server.Controllers
             }
         }
 
-        // Helper methods
-        private string? GetJsonStringValue(JsonElement element, params string[] path)
-        {
-            JsonElement current = element;
-            foreach (var key in path)
-            {
-                if (current.TryGetProperty(key, out var next))
-                {
-                    current = next;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            return current.GetString();
-        }
-
-        private string? GetJsonArrayFirstString(JsonElement element, string key)
-        {
-            if (element.TryGetProperty(key, out var arrayElement) && arrayElement.ValueKind == JsonValueKind.Array)
-            {
-                var enumerator = arrayElement.EnumerateArray();
-                if (enumerator.MoveNext())
-                {
-                    return enumerator.Current.GetString();
-                }
-            }
-            return null;
-        }
-
-        private long GetJsonLongValue(JsonElement element, string key)
-        {
-            if (element.TryGetProperty(key, out var value) && value.TryGetInt64(out var result))
-            {
-                return result;
-            }
-            return 0;
-        }
-
-        private double GetJsonDoubleValue(JsonElement element, string key, int arrayIndex)
-        {
-            if (element.TryGetProperty(key, out var arrayElement) && arrayElement.ValueKind == JsonValueKind.Array)
-            {
-                var items = arrayElement.EnumerateArray().ToList();
-                if (arrayIndex < items.Count && items[arrayIndex].TryGetDouble(out var result))
-                {
-                    return result;
-                }
-            }
-            return 0;
-        }
+       
     }
 }
